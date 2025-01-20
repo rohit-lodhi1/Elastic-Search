@@ -25,4 +25,6 @@ public interface IProductService {
 	public ApiResponse fuzzySearch(String keyword,int pageNumber,int pageSize);
 
 	public ApiResponse getAllProducts(int page, int size);
+
+	public ApiResponse autoSuggestSearching(String keyword);
 }

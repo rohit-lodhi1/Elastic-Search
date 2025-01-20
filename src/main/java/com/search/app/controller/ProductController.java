@@ -50,12 +50,20 @@ public class ProductController {
 		return ResponseEntity.ok(this.productService.getAllProducts(page,size));
 	}
 
+	// fuzzy searching
 	@GetMapping("/fuzzy/search")
 	public ResponseEntity<ApiResponse> fuzzySearch(
 			@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,@RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
 			@RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
           return ResponseEntity.ok(this.productService.fuzzySearch(keyword,pageNumber,pageSize));
 	}
+	
+	// auto suggest partial searching
+	@GetMapping("/suggest/search")
+	public ResponseEntity<ApiResponse> autoSuggestSearching(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword){
+		return ResponseEntity.ok(this.productService.autoSuggestSearching(keyword));
+	}
+	
 
 	// pending......
 	@GetMapping("/search")

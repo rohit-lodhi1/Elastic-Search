@@ -82,7 +82,7 @@ public class ProductServiceImpl implements IProductService {
 
 	@Override
 	public ApiResponse fuzzySearch(String keyword, int pageNumber, int pageSize) {
-		Supplier<Query> supplier = this.getSupplier(keyword);
+		Supplier<Query> supplier = this.getFuzzySearchSupplier(keyword);
 		try {
 			SearchResponse<Product> response = elasticsearchClient.search(
 					s -> s.index("products").query(supplier.get()).from(pageNumber * pageSize).size(pageSize),
@@ -99,7 +99,36 @@ public class ProductServiceImpl implements IProductService {
 		return null;
 	}
 
-	public Supplier<Query> getSupplier(String keyword) {
+	@Override
+	public ApiResponse autoSuggestSearching(String keyword) {
+		Supplier<Query> supplier = this.getAutoSuggestSupplier(keyword);
+		try {
+			SearchResponse<Product> response = elasticsearchClient
+					.search(s -> s.index("products").query(supplier.get()).from(0).size(10), Product.class);
+			System.out.println(response.hits().toString());
+			List<String> content = response.hits().hits().stream().map(e -> e.source().getName())
+					.collect(Collectors.toList());
+			return ApiResponse.builder().body(content).build();
+		} catch (ElasticsearchException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public Supplier<Query> getAutoSuggestSupplier(String keyword) {
+		var query = new MultiMatchQuery.Builder()
+				.query(keyword)
+				.fields("name", "description", "tags")
+				.analyzer("standard")   // Simple ,Whitespace ,Keyword ,Language 
+				.fuzziness("auto")      // "2" ,"3","4"
+				.build();
+		return () -> Query.of(q -> q.multiMatch(query));
+	}
+
+	// supplier for fuzzy search on fields of product
+	public Supplier<Query> getFuzzySearchSupplier(String keyword) {
 		var multiMatchQuery = new MultiMatchQuery.Builder().query(keyword) // The search keyword
 				.fields("name", "description", "tags") // Fields to search on
 				.fuzziness("AUTO") // Automatic fuzziness (you can adjust this as needed (e.g "2" ,"3","4"))
