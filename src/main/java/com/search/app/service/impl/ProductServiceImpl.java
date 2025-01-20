@@ -118,29 +118,36 @@ public class ProductServiceImpl implements IProductService {
 	}
 
 	public Supplier<Query> getAutoSuggestSupplier(String keyword) {
-		var query = new MultiMatchQuery.Builder()
-				.query(keyword)
-				.fields("name", "description", "tags")
-				.analyzer("standard")   // Simple ,Whitespace ,Keyword ,Language 
-				.fuzziness("auto")      // "2" ,"3","4"
+		var query = new MultiMatchQuery.Builder().query(keyword).fields("name", "description", "tags")
+				.analyzer("standard") // Simple ,Whitespace ,Keyword ,Language
+				.fuzziness("auto") // "2" ,"3","4"
 				.build();
-		return () -> Query.of(q -> q.multiMatch(query));
+		return () -> Query.of(q -> q.bool(b -> b.must(m -> m.multiMatch(query)).filter(this.getValidationFilter())));
+	}
+
+	public Query getValidationFilter() {
+		return Query.of(f -> f.bool(bf -> bf.must(m1 -> m1.term(t1 -> t1.field("isActive").value(true))) // isActive =
+				// true
+				.must(m2 -> m2.term(t2 -> t2.field("isDeleted").value(false))) // isDeleted = false
+		));
 	}
 
 	// supplier for fuzzy search on fields of product
 	public Supplier<Query> getFuzzySearchSupplier(String keyword) {
 		var multiMatchQuery = new MultiMatchQuery.Builder().query(keyword) // The search keyword
-				.fields("name", "description", "tags") // Fields to search on
+				.fields("name", "description", "tags")// Fields to search on
 				.fuzziness("AUTO") // Automatic fuzziness (you can adjust this as needed (e.g "2" ,"3","4"))
 				.build();
 		try {
 			var rangeQuery = new RangeQuery.Builder().number(r -> r.field("price")
 					.gte(Double.parseDouble(keyword) + Integer.MIN_VALUE).lte(Double.parseDouble(keyword) + 100))
 					.build();
-			return () -> Query.of(q -> q.range(rangeQuery));
+			return () -> Query
+					.of(q -> q.bool(b -> b.must(m -> m.range(rangeQuery)).filter(this.getValidationFilter())));
 		} catch (NumberFormatException ex) {
 
-			return () -> Query.of(q -> q.multiMatch(multiMatchQuery));
+			return () -> Query.of(
+					q -> q.bool(b -> b.must(m1 -> m1.multiMatch(multiMatchQuery)).filter(this.getValidationFilter())));
 		}
 	}
 
