@@ -1,0 +1,318 @@
+{
+	"info": {
+		"_postman_id": "043617cc-8c99-4a29-a1e5-3c500055c056",
+		"name": "Elastic Search",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27091827"
+	},
+	"item": [
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Add Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Iphone5 Headphones\",\r\n  \"description\": \"High-quality over-ear wireless headphones with noise cancellation and long battery life.\",\r\n  \"price\": 129.99,\r\n  \"createdBy\": \"fcbf8b3f-3bb7-497b-bd65-02bc2de1c95b\",\r\n  \"ownerId\": \"d94a6b0f-1c7e-41f0-b44e-0832bda0a9b7\",\r\n  \"tags\": [\"electronics\", \"Branded\", \"wireless\", \"headphones\", \"noise-cancellation\"]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/api/v1/product/create",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"product",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search & Filter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/v1/product/search?keyword=iphoen5",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"product",
+								"search"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "iphoen5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"2d7c8d76-04f0-4813-ac10-96424a30ea82\",\r\n  \"name\": \"Iphone Mobiles\",\r\n  \"description\": \"High-quality over-ear wireless headphones with noise cancellation and long battery life.\",\r\n  \"price\": 129.99,\r\n  \"createdBy\": \"fcbf8b3f-3bb7-497b-bd65-02bc2de1c95b\",\r\n  \"ownerId\": \"d94a6b0f-1c7e-41f0-b44e-0832bda0a9b7\",\r\n  \"tags\": [\"electronics\", \"audio\", \"wireless\", \"headphones\", \"noise-cancellation\"]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/api/v1/product/update",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"product",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/api/v1/product/delete?id=acb67067-c4e4-4648-9e57-ac1c921b3a6f",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"v1",
+								"product",
+								"delete"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "acb67067-c4e4-4648-9e57-ac1c921b3a6f"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Elastic Server Search",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"query\": {\"bool\": {\r\n      \"should\": [\r\n        {\r\n          \"fuzzy\": {\r\n            \"name\": {\r\n              \"value\": \"iphone Headphones\",\r\n              \"fuzziness\": \"AUTO\"\r\n            }\r\n          }\r\n        },\r\n        {\r\n          \"fuzzy\": {\r\n            \"description\": {\r\n              \"value\": \"iphone Headphones\",\r\n              \"fuzziness\": \"AUTO\"\r\n            }\r\n          }\r\n        },\r\n        {\r\n          \"fuzzy\": {\r\n            \"createdBy\": {\r\n              \"value\": \"iphone Headphones\",\r\n              \"fuzziness\": \"AUTO\"\r\n            }\r\n          }\r\n        },\r\n        {\r\n          \"fuzzy\": {\r\n            \"ownerId\": {\r\n              \"value\": \"iphone Headphones\",\r\n              \"fuzziness\": \"AUTO\"\r\n            }\r\n          }\r\n        },\r\n        {\r\n          \"fuzzy\": {\r\n            \"inventoryId\": {\r\n              \"value\": \"iphone Headphones\",\r\n              \"fuzziness\": \"AUTO\"\r\n            }\r\n          }\r\n        },\r\n        {\r\n          \"wildcard\": {\r\n            \"name\": {\r\n              \"value\": \"*iphone Headphones*\"\r\n            }\r\n          }\r\n        },\r\n        {\r\n          \"wildcard\": {\r\n            \"description\": {\r\n              \"value\": \"*iphone Headphones*\"\r\n            }\r\n          }\r\n        },\r\n        {\r\n          \"wildcard\": {\r\n            \"createdBy\": {\r\n              \"value\": \"*iphone Headphones*\"\r\n            }\r\n          }\r\n        },\r\n        {\r\n          \"wildcard\": {\r\n            \"ownerId\": {\r\n              \"value\": \"*iphone Headphones*\"\r\n            }\r\n          }\r\n        },\r\n        {\r\n          \"wildcard\": {\r\n            \"inventoryId\": {\r\n              \"value\": \"*iphone Headphones*\"\r\n            }\r\n          }\r\n        }\r\n      ]\r\n    }\r\n  }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9200/products/_search",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"products",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Elastic Server Setting update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"persistent\": {\r\n    \"cluster.routing.allocation.disk.watermark.low\": \"15gb\",\r\n    \"cluster.routing.allocation.disk.watermark.high\": \"10gb\",\r\n    \"cluster.routing.allocation.disk.watermark.flood_stage\": \"5gb\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9200/_cluster/settings",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"_cluster",
+						"settings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Server Up Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9200/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Server Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9200/_cluster/health?pretty",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"_cluster",
+						"health"
+					],
+					"query": [
+						{
+							"key": "pretty",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Memory Allocation Logs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9200/_cluster/allocation/explain?pretty",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"_cluster",
+						"allocation",
+						"explain"
+					],
+					"query": [
+						{
+							"key": "pretty",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Index Searching",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9200/products/_search",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"products",
+						"_search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Index Details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9200/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Index Mapping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9200/products/_mappings",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"products",
+						"_mappings"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

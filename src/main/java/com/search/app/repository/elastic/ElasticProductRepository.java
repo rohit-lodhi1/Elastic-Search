@@ -46,4 +46,6 @@ public interface ElasticProductRepository extends ElasticsearchRepository<Produc
     
     @Query("{\"wildcard\": {\"name\": {\"value\": \"*?0*\"}}}")
     Page<Product> findByNameContaining(String keyword,Pageable pageable);
+    
+   Page<Product> findAllByIsActiveAndIsDeleted(boolean isActive,boolean isDeleted,Pageable pageable);
 }

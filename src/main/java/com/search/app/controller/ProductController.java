@@ -42,7 +42,22 @@ public class ProductController {
 	public ResponseEntity<ApiResponse> deleteProduct(@RequestParam("id") String id) {
 		return new ResponseEntity<>(this.productService.deleteProduct(id), HttpStatus.OK);
 	}
+	
+	@GetMapping("/findAll")
+	public ResponseEntity<ApiResponse> getAllProducts(
+			@RequestParam(value = "page", required = false, defaultValue = "0") int page,
+			@RequestParam(value = "size", required = false, defaultValue = "10") int size){
+		return ResponseEntity.ok(this.productService.getAllProducts(page,size));
+	}
 
+	@GetMapping("/fuzzy/search")
+	public ResponseEntity<ApiResponse> fuzzySearch(
+			@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,@RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
+			@RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
+          return ResponseEntity.ok(this.productService.fuzzySearch(keyword,pageNumber,pageSize));
+	}
+
+	// pending......
 	@GetMapping("/search")
 	public ResponseEntity<Page<Product>> searchProducts(
 			@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
@@ -55,7 +70,6 @@ public class ProductController {
 			@RequestParam(value = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(value = "sortBy", required = false, defaultValue = "name") String sortBy,
 			@RequestParam(value = "sortOrder", required = false, defaultValue = "asc") String sortOrder) {
-
 		// Use the service method to get paginated products based on filters
 		Page<Product> products = productService.searchProducts(keyword, category, minPrice, maxPrice, status, tags,
 				page, size, sortBy, sortOrder);
