@@ -1,8 +1,12 @@
 package com.search.app.entity;
 
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import org.springframework.data.elasticsearch.annotations.Document;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
@@ -28,6 +32,7 @@ import lombok.ToString;
 @Entity
 @Builder
 @Document(indexName = "products") // Elasticsearch Index Mapping
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Product extends AuditData {
 
 	@Id
@@ -52,5 +57,13 @@ public class Product extends AuditData {
 
 	@Enumerated(EnumType.STRING)
 	private ProductStatus status;
+
+	public void setUpdatedDate(long epochMillis) {
+		this.setUpdatedDate(Instant.ofEpochMilli(epochMillis).atZone(ZoneOffset.UTC).toLocalDateTime());
+	}
+
+	public void setCreatedDate(long epochMillis) {
+		this.setCreatedDate(Instant.ofEpochMilli(epochMillis).atZone(ZoneOffset.UTC).toLocalDateTime());
+	}
 
 }

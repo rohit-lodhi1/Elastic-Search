@@ -21,4 +21,8 @@ public interface IProductService {
 	public ApiResponse deleteProduct(String id);
 
 	public ApiResponse updateProduct(ProductRequest request);
+
+	public ApiResponse fuzzySearch(String keyword,int pageNumber,int pageSize);
+
+	public ApiResponse getAllProducts(int page, int size);
 }
